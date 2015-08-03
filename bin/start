@@ -1,0 +1,14 @@
+#!/bin/sh
+mkdir -p /home/ohmspace/webapps/slack_integration/run
+pid=$(/sbin/pidof /home/ohmspace/webapps/slack_integration/bin/node)
+if echo "$pid" | grep -q " "; then
+  pid=""
+fi
+if [ -n "$pid" ]; then
+  user=$(ps -p $pid -o user | tail -n 1)
+  if [ $user = "ohmspace" ]; then
+    exit 0
+  fi
+fi
+nohup /home/ohmspace/webapps/slack_integration/bin/node /home/ohmspace/webapps/slack_integration/hello-world.js > /dev/null 2>&1 &
+/sbin/pidof /home/ohmspace/webapps/slack_integration/bin/node > /home/ohmspace/webapps/slack_integration/run/node.pid
